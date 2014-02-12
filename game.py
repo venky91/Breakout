@@ -105,7 +105,8 @@ class Ball:
         for row in matrix.array:
             for column in row:
                 if self.circleRect.colliderect(column):
-                    pass
+                    row.remove(column)
+                    self.SPEED_Y = -self.SPEED_Y
 
 
     def render(self, window):
@@ -155,11 +156,23 @@ clock = pygame.time.Clock()
 paddle = Paddle(window)
 matrix = Block_Matrix()
 
-while True:
+start = False
+
+ball.render(window)
+matrix.render(window)
+paddle.render(window)
+
+while not start:
+
+    for event in pygame.event.get():
+        
+        if event.type == pygame.QUIT:
+            done = True
+
     pressed = pygame.key.get_pressed()
-    
+
     if pressed[pygame.K_LEFT] or pressed[pygame.K_RIGHT]:
-        break
+        start = True
 
 while not done:
 
