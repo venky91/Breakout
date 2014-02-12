@@ -1,6 +1,7 @@
 import pygame
 import math
 import os
+import sys
 
 pygame.init()
 
@@ -30,9 +31,13 @@ class Block_Matrix:
                 if index == 19:
                     self.top += 20
 
-    def update(self):
+    def update(self, window):
         if self.array == []:
-            print("Game Over")
+            
+            font = pygame.font.SysFont("comicsansms", 72)
+            text = font.render("You Win!", True, (0,255,0))
+            window.screen.blit(text, (400 - text.get_width() , 300 - text.get_height() // 2))
+
             return True
         else:
             return False
@@ -50,8 +55,8 @@ class Ball:
     DOWNLEFT = True
     DOWNRIGHT = False
     
-    SPEED_X = 3 #rate at which the ball's coordinates changes
-    SPEED_Y = 3
+    SPEED_X = 5 #rate at which the ball's coordinates changes
+    SPEED_Y = 5
     RADIUS = 6
 
     def __init__(self):
@@ -77,6 +82,11 @@ class Ball:
 
         if (self.y - 6 < 0):
             self.SPEED_Y = -self.SPEED_Y
+
+        if (self.y + 6 > 600):
+            font = pygame.font.SysFont("comicsansms", 72)
+            text = font.render("You Lose!", True, (0,255,0))
+            window.screen.blit(text, (400 - text.get_width() , 300 - text.get_height() // 2))
     
     def checkCollision(self, paddle, matrix):
         "checks if the ball has hit the paddle"
@@ -118,7 +128,7 @@ class Paddle:
         self.x = (window.WINDOW_WIDTH/2) - 65
         self.y = window.WINDOW_HEIGHT - 100
         self.rect = pygame.Rect(self.x,self.y, 130, 2)
-        self.moveSpeed = 4
+        self.moveSpeed = 7
         self.MOVINGLEFT = False
 
         pygame.draw.rect(window.screen,(255,255,255), ( self.rect))
@@ -167,6 +177,7 @@ while not start:
     for event in pygame.event.get():
         
         if event.type == pygame.QUIT:
+            start = True
             done = True
 
     pressed = pygame.key.get_pressed()
@@ -193,6 +204,9 @@ while not done:
     ball.render(window)
     paddle.render(window)
     matrix.render(window)
-    matrix.update()
+    matrix.update(window)
+            
     pygame.display.flip() #update screen
     clock.tick(60) #60 fps
+
+pygame.quit()
