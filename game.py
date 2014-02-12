@@ -36,6 +36,8 @@ class Ball:
         self.speedY = 0
         " initialized coordinates and coordinate speed"
 
+    """checks the direction of the ball and makes appropriate changes to
+    direction"""
     def update(self):
         
         if self.UPRIGHT:
@@ -124,5 +126,5 @@ while not done:
     ball.update()
     ball.render(window)
     paddle.render(window)
-    pygame.display.flip()
-    clock.tick(60)
+    pygame.display.flip() "update screen"
+    clock.tick(60) "60 fps"
