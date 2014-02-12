@@ -17,7 +17,25 @@ class Window:
 class Block_Matrix:
 
     def __init__(self):
-        self.array = [[]]
+        self.array = []
+        self.top = 0
+        for row in range(8):
+            self.left = 0
+            self.array.append([])
+            for index, column in enumerate(range(6)):
+                self.array[row].append(pygame.Rect(self.left, self.top,
+                    100,20,))
+                self.left += 100
+                if index == 5:
+                    self.top += 20
+
+    def render(self, window):
+
+        for row, x in enumerate(range(8)):
+            for column, x in enumerate(range(6)):
+                pygame.draw.rect(window.screen,(0,255,0),
+                        self.array[row][column]) 
+
 
 class Ball:
 
@@ -108,6 +126,7 @@ window = Window()
 ball = Ball()
 clock = pygame.time.Clock()
 paddle = Paddle(window)
+matrix = Block_Matrix()
 
 while not done:
 
@@ -126,5 +145,6 @@ while not done:
     ball.update()
     ball.render(window)
     paddle.render(window)
+    matrix.render(window)
     pygame.display.flip() #update screen
     clock.tick(60) #60 fps
