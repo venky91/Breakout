@@ -1,5 +1,6 @@
 import pygame
 import os
+import math
 
 pygame.init()
 
@@ -37,66 +38,68 @@ class Block_Matrix:
                         self.array[row][column]) 
 
 
+
 class Ball:
 
     UPRIGHT = False
-    UPLEFT = True
-    DOWNLEFT = False
+    UPLEFT = False
+    DOWNLEFT = True
     DOWNRIGHT = False
     
-    SPEED = 2 #rate at which the ball's coordinates changes
+    SPEED_X = 3 #rate at which the ball's coordinates changes
+    SPEED_Y = 3
     RADIUS = 6
 
     def __init__(self):
         self.x = 240
         self.y = 400
-        self.speedX = 0
-        self.speedY = 0
         " initialized coordinates and coordinate speed"
+        
+        self.circleRect = pygame.draw.circle(window.screen, (255,0,0), (self.x, self.y), self.RADIUS)
 
     """checks the direction of the ball and makes appropriate changes to
     direction"""
     def update(self):
         
-        if self.UPRIGHT:
-            self.x += self.SPEED
-            self.y -= self.SPEED
-        if self.UPLEFT:
-            self.x -= self.SPEED
-            self.y -= self.SPEED
-        if self.DOWNLEFT:
-            self.x -= self.SPEED
-            self.y += self.SPEED
-        if self.DOWNRIGHT:
-            self.x += self.SPEED
-            self.y += self.SPEED
+        self.x += self.SPEED_X
+        self.y += self.SPEED_Y
 
         if (self.x - 6) < 0:
-            if self.DOWNLEFT:
-                self.DOWNLEFT = False
-                self.DOWNRIGHT = True
-            elif self.UPLEFT:
-                self.UPLEFT = False
-                self.UPRIGHT = True
+            self.SPEED_X = -self.SPEED_X
+                
 
         if (self.x + 6 > 500):
-            if self.DOWNRIGHT:
-                self.DOWNRIGHT = False
-                self.DOWNLEFT = True
-            elif self.UPRIGHT:
-                self.UPRIGHT = False
-                self.UPLEFT = True
+            self.SPEED_X = -self.SPEED_X
 
         if (self.y - 6 < 0):
-            if self.UPLEFT:
-                self.UPLEFT = False
-                self.DOWNLEFT = True
-            elif self.UPRIGHT:
-                self.UPRIGHT = False
-                self.DOWNRIGHT = True
+            self.SPEED_Y = -self.SPEED_Y
+    
+    def checkCollision(self, paddle, matrix):
+        "checks if the ball has hit the paddle"
+
+        if (self.circleRect.colliderect(paddle.rect)):
+
+            if self.DOWNLEFT and paddle.x < self.x and paddle.MOVINGRIGHT:
+                self.SPEED_X = -self.SPEED_X
+                self.SPEED_Y = -self.SPEED_Y
+            
+            elif self.DOWNLEFT and paddle.MOVINGLEFT == False and paddle.MOVINGRIGHT == False:
+                self.SPEED_Y = -self.SPEED_Y
+
+            elif self.DOWNRIGHT and paddle.MOVINGLEFT and  paddle.x >= self.x:
+                self.SPEED_Y = -self.SPEED_Y
+
+            elif self.DOWNRIGHT and paddle.x > self.x and paddle.MOVINGLEFT:
+                self.SPEED_X = -self.SPEED_X
+                self.SPEED_Y = -self.SPEED_Y
+            
+            elif self.DOWNRIGHT and paddle.MOVINGLEFT == False and paddle.MOVINGRIGHT == False:
+                self.SPEED_Y = -self.SPEED_Y
+            else:
+                self.SPEED_Y = -self.SPEED_Y
 
     def render(self, window):
-        pygame.draw.circle(window.screen, (255,0,0), (self.x, self.y), self.RADIUS)
+        self.circleRect = pygame.draw.circle(window.screen, (255,0,0), (self.x, self.y), self.RADIUS)
 
 class Paddle:
 
@@ -105,18 +108,32 @@ class Paddle:
         self.y = window.WINDOW_HEIGHT - 100
         self.rect = pygame.Rect(self.x,self.y, 130, 2)
         self.moveSpeed = 4
+        self.MOVINGLEFT = False
+        self.MOVINGRIGHT = False
         pygame.draw.rect(window.screen,(255,255,255), ( self.rect))
 
     def processInput(self, pressed):
         if pressed[pygame.K_LEFT]: 
+            self.MOVINGLEFT = True
             self.rect.left -= self.moveSpeed
+            self.x -=self.moveSpeed
             if self.rect.left < 0:
                 self.rect.left = 0
+                self.x = 65
+                self.MOVINGLEFT = False
 
-        if pressed[pygame.K_RIGHT]: 
+        elif pressed[pygame.K_RIGHT]: 
+            self.MOVINGRIGHT = True
             self.rect.left += self.moveSpeed
+            self.x += self.moveSpeed
             if self.rect.right > 500:
                 self.rect.right = 500
+                self.x = 435
+                self.MOVINGRIGHT = False
+
+        else:
+            self.MOVINGLEFT = False
+            self.MOVINGRIGHT = False
 
 
     def render(self, window):
@@ -142,9 +159,10 @@ while not done:
 
     pressed = pygame.key.get_pressed() 
     paddle.processInput(pressed)
+    ball.checkCollision(paddle, matrix)
     ball.update()
     ball.render(window)
     paddle.render(window)
-    matrix.render(window)
+    #matrix.render(window)
     pygame.display.flip() #update screen
     clock.tick(60) #60 fps
