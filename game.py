@@ -1,6 +1,6 @@
 import pygame
-import os
 import math
+import os
 
 pygame.init()
 
@@ -23,21 +23,25 @@ class Block_Matrix:
         for row in range(8):
             self.left = 0
             self.array.append([])
-            for index, column in enumerate(range(6)):
+            for index, column in enumerate(range(20)):
                 self.array[row].append(pygame.Rect(self.left, self.top,
-                    100,20,))
-                self.left += 100
-                if index == 5:
+                    30,20,))
+                self.left += 30
+                if index == 19:
                     self.top += 20
+
+    def update(self):
+        if self.array == []:
+            print("Game Over")
+            return True
+        else:
+            return False
 
     def render(self, window):
 
-        for row, x in enumerate(range(8)):
-            for column, x in enumerate(range(6)):
-                pygame.draw.rect(window.screen,(0,255,0),
-                        self.array[row][column]) 
-
-
+        for row in self.array:
+            for column in row:
+                pygame.draw.rect(window.screen,(0,255,0), column) 
 
 class Ball:
 
@@ -98,6 +102,14 @@ class Ball:
             else:
                 self.SPEED_Y = -self.SPEED_Y
 
+        for row in matrix.array:
+            for column in row:
+                if self.circleRect.colliderect(column):
+                    row.remove(column)
+                    self.SPEED_Y = -self.SPEED_Y
+
+
+
     def render(self, window):
         self.circleRect = pygame.draw.circle(window.screen, (255,0,0), (self.x, self.y), self.RADIUS)
 
@@ -109,7 +121,7 @@ class Paddle:
         self.rect = pygame.Rect(self.x,self.y, 130, 2)
         self.moveSpeed = 4
         self.MOVINGLEFT = False
-        self.MOVINGRIGHT = False
+
         pygame.draw.rect(window.screen,(255,255,255), ( self.rect))
 
     def processInput(self, pressed):
@@ -163,6 +175,7 @@ while not done:
     ball.update()
     ball.render(window)
     paddle.render(window)
-    #matrix.render(window)
+    matrix.render(window)
+    matrix.update()
     pygame.display.flip() #update screen
     clock.tick(60) #60 fps
