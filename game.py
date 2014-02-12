@@ -126,5 +126,5 @@ while not done:
     ball.update()
     ball.render(window)
     paddle.render(window)
-    pygame.display.flip() "update screen"
-    clock.tick(60) "60 fps"
+    pygame.display.flip() #update screen
+    clock.tick(60) #60 fps
