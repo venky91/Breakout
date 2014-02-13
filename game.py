@@ -5,8 +5,6 @@ import sys
 
 pygame.init()
 
-done = False
-
 class Window:
 
     WINDOW_HEIGHT = 600
@@ -160,53 +158,68 @@ class Paddle:
     def render(self, window):
         pygame.draw.rect(window.screen,(255,255,255), self.rect) 
 
-window = Window()
-ball = Ball()
-clock = pygame.time.Clock()
-paddle = Paddle(window)
-matrix = Block_Matrix()
+def getInput():
+    
+    start = False
+    while not start:
 
-start = False
-
-ball.render(window)
-matrix.render(window)
-paddle.render(window)
-
-while not start:
-
-    for event in pygame.event.get():
+        for event in pygame.event.get():
         
-        if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:
+                sys.exit(1)
+
+        pressed = pygame.key.get_pressed()
+
+        if pressed[pygame.K_LEFT] or pressed[pygame.K_RIGHT]:
             start = True
-            done = True
 
-    pressed = pygame.key.get_pressed()
-
-    if pressed[pygame.K_LEFT] or pressed[pygame.K_RIGHT]:
-        start = True
-
-while not done:
-
-    window.screen.fill((0,0,0))
-    filtered_events = []
-
-    for event in pygame.event.get():
-        
-        if event.type == pygame.QUIT:
-            done = True
-
-        filtered_events.append(event)
-
-    pressed = pygame.key.get_pressed() 
-    paddle.processInput(pressed)
-    ball.checkCollision(paddle, matrix)
-    ball.update()
+def initialize():
+    global window 
+    window = Window()
+    global ball
+    ball = Ball()
+    global clock
+    clock = pygame.time.Clock()
+    global paddle
+    paddle = Paddle(window)
+    global matrix
+    matrix = Block_Matrix()
     ball.render(window)
-    paddle.render(window)
     matrix.render(window)
-    matrix.update(window)
-            
-    pygame.display.flip() #update screen
-    clock.tick(60) #60 fps
+    paddle.render(window)
 
-pygame.quit()
+def startGame():
+
+    done = False
+
+    while not done:
+
+        window.screen.fill((0,0,0))
+        filtered_events = []
+
+        for event in pygame.event.get():
+        
+            if event.type == pygame.QUIT:
+                done = True
+
+            filtered_events.append(event)
+
+        pressed = pygame.key.get_pressed() 
+        paddle.processInput(pressed)
+        ball.checkCollision(paddle, matrix)
+        ball.update()
+        ball.render(window)
+        paddle.render(window)
+        matrix.render(window)
+        matrix.update(window)
+            
+        pygame.display.flip() #update screen
+        clock.tick(60) #60 fps
+
+def main():
+
+    initialize()
+    getInput()
+    startGame()
+
+main()
