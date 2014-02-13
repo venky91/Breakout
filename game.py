@@ -8,7 +8,7 @@ pygame.init()
 class Window:
 
     WINDOW_HEIGHT = 600
-    WINDOW_WIDTH = 500
+    WINDOW_WIDTH = 800
 
     def __init__(self):
         self.screen = pygame.display.set_mode((self.WINDOW_WIDTH,
@@ -20,7 +20,7 @@ class Block_Matrix:
         self.array = []
         self.top = 40
         for row in range(8):
-            self.left = 0
+            self.left = 100
             self.array.append([])
             for index, column in enumerate(range(20)):
                 self.array[row].append(pygame.Rect(self.left, self.top,
@@ -30,7 +30,7 @@ class Block_Matrix:
                     self.top += 20
 
     def update(self, window):
-        if self.array == []:
+        if not self.array:
             
             font = pygame.font.SysFont("comicsansms", 72)
             text = font.render("You Win!", True, (0,255,0))
@@ -75,7 +75,7 @@ class Ball:
             self.SPEED_X = -self.SPEED_X
                 
 
-        if (self.x + 6 > 500):
+        if (self.x + 6 > 800):
             self.SPEED_X = -self.SPEED_X
 
         if (self.y - 6 < 0):
@@ -145,9 +145,9 @@ class Paddle:
             self.MOVINGRIGHT = True
             self.rect.left += self.moveSpeed
             self.x += self.moveSpeed
-            if self.rect.right > 500:
-                self.rect.right = 500
-                self.x = 435
+            if self.rect.right > 800:
+                self.rect.right = 800
+                self.x = 735
                 self.MOVINGRIGHT = False
 
         else:
