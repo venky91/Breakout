@@ -18,7 +18,7 @@ class Block_Matrix:
 
     def __init__(self):
         self.array = []
-        self.top = 0
+        self.top = 40
         for row in range(8):
             self.left = 0
             self.array.append([])
