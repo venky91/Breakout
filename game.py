@@ -30,11 +30,11 @@ class Block_Matrix:
                     self.top += 20
 
     def update(self, window):
-        if not self.array:
+        if self.array == [[], [], [], [], [], [], [], []]:
             
             font = pygame.font.SysFont("comicsansms", 72)
             text = font.render("You Win!", True, (0,255,0))
-            window.screen.blit(text, (400 - text.get_width() , 300 - text.get_height() // 2))
+            window.screen.blit(text, (400 - text.get_width() // 2 , 300 - text.get_height() // 2))
 
             return True
         else:
@@ -84,7 +84,7 @@ class Ball:
         if (self.y + 6 > 600):
             font = pygame.font.SysFont("comicsansms", 72)
             text = font.render("You Lose!", True, (0,255,0))
-            window.screen.blit(text, (400 - text.get_width() , 300 - text.get_height() // 2))
+            window.screen.blit(text, (400 - text.get_width() //2 , 300 - text.get_height() // 2))
     
     def checkCollision(self, paddle, matrix):
         "checks if the ball has hit the paddle"
