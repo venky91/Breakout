@@ -18,16 +18,16 @@ class Block_Matrix:
 
     def __init__(self):
         self.array = []
-        self.top = 40
+        top = 40
         for row in range(8):
-            self.left = 100
+            left = 85
             self.array.append([])
-            for index, column in enumerate(range(20)):
-                self.array[row].append(pygame.Rect(self.left, self.top,
-                    30,20,))
-                self.left += 30
-                if index == 19:
-                    self.top += 20
+            for column in range(20):
+                self.array[row].append(pygame.Rect(left, top,
+                    30,15,))
+                left += 31
+                if column == 19:
+                    top += 16
 
     def update(self, window):
         if self.array == [[], [], [], [], [], [], [], []]:
@@ -124,7 +124,7 @@ class Paddle:
 
     def __init__(self, window):
         self.x = (window.WINDOW_WIDTH/2) - 65
-        self.y = window.WINDOW_HEIGHT - 100
+        self.y = window.WINDOW_HEIGHT - 50
         self.rect = pygame.Rect(self.x,self.y, 130, 2)
         self.moveSpeed = 7
         self.MOVINGLEFT = False
