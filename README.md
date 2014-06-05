@@ -1,3 +1,3 @@
 Breakout
 ========
-https://github.com/venky91/Breakout/raw/master/gameImage.png
+![](https://github.com/venky91/Breakout/raw/master/gameImage.png)
